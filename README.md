@@ -86,7 +86,7 @@ cd fireredasr
 ```bash
 pip install -r requirements.txt
 ```
-必须从https://pytorch.org/get-started/locally/安装对应自己cuda版本的pytorch。
+必须从https://pytorch.org/get-started/locally/  安装对应自己cuda版本的pytorch。
 ### 步骤 3：下载预训练模型
 项目提供了便捷的模型下载脚本：
 
@@ -132,7 +132,9 @@ python cli.py -f audio.mp3 --ab 16
 ```bash
 python cli.py -f audio.mp3 --bs 8
 ```
-简单地说，必须使用自动批次（--ab）或者固定批次（--bs）参数，其余参数如果不指定将使用默认参数（--fp，--npu，--nts），即默认以fp16精度、不加标点、不返回词级时间戳的方式执行，这是效率最高的模式（显存占用近3G）。不返回词级时间戳完全不影响字幕的生成，字幕也是同步的，只是缺少词句精度，导致字幕的某些片段可能显示过长或过短。关于是否需要开启标点，punc模型占用显存400M左右，速度极快，几秒内就能完成加标点，可以按需开启。如果以全精度、加标点运行，显存占用近6G。
+简单地说，必须使用自动批次（--ab）或者固定批次（--bs）参数，其余参数如果不指定将使用默认参数（--fp，--npu，--nts），即默认以fp16精度、不加标点、不返回词级时间戳的方式执行，这是效率最高的模式（显存占用近3G）。
+不返回词级时间戳完全不影响字幕的生成，字幕也是同步的，只是缺少词句精度，导致字幕的某些片段可能显示过长或过短。
+关于是否需要开启标点，punc模型占用显存400M左右，速度极快，几秒内就能完成加标点，可以按需开启。如果以全精度、加标点运行，显存占用近6G。
 注意不建议手动修改config.py中的配置模板，因为实际上是按cli传递的参数运行的。
 
 #### 4. 处理多个文件
@@ -205,7 +207,9 @@ A: FireRedASR2-AED 支持最长约 60 秒的音频输入。超过 60 秒可能�
 
 ### Q3: 如何选择批次大小？
 A: 首次使用，推荐使用 `--ab 3` 参数启用自动批次管理，系统会根据显存利用率自动调整。然后根据结果后续，使用 `--ab N` 固定批次 `--bs N`。
-批次越大，并不意味着转写效率越高，即便显存足够富裕。即批次大小与RTF并非是线性的反比关系，甚至可能产生反效果。效率根在GPU的计算能力而不显存大小。以本人RTX3060 6G显存跑默认模式，bs 1到bs 10，各10次，总计100次的测试，RTF在0.1523-0.2902之间，似乎固定批次为3-5之间效果最佳。如果以全精度、加标点运行，RTF可能在0.4-0.5，此项我没做大量测试.如需测试，请参考**cli-help.md**，运行python test_direct.py，注意这个测试命令后面的文件必须是wav格式（否则会报错，如此设计是为了避免同一个文件运行ffmpeg多次），请先手动完成格式转换（ffmpeg -i <input_audio_path> -ar 16000 -ac 1 -acodec pcm_s16le -f wav <output_wav_path>）。该测试命令，如果不额外指定repeat参数，将默认循环测试10次。
+批次越大，并不意味着转写效率越高，即便显存足够富裕。即批次大小与RTF并非是线性的反比关系，甚至可能产生反效果。效率根在GPU的计算能力而不显存大小。
+以本人RTX3060 6G显存跑默认模式，bs 1到bs 10，各10次，总计100次的测试，RTF在0.1523-0.2902之间，似乎固定批次为3-5之间效果最佳。如果以全精度、加标点运行，RTF可能在0.4-0.5，此项我没做大量测试.
+如需测试，请参考**cli-help.md**，运行python test_direct.py，注意这个测试命令后面的文件必须是wav格式（否则会报错，如此设计是为了避免同一个文件运行ffmpeg多次），请先手动完成格式转换（ffmpeg -i <input_audio_path> -ar 16000 -ac 1 -acodec pcm_s16le -f wav <output_wav_path>）。该测试命令，如果不额外指定repeat参数，将默认循环测试10次。
 
 
 ### Q4: 出现 CUDA out of memory 错误怎么办？
@@ -249,25 +253,11 @@ A:本项目前期原来是用NiceGUI写的前端，光UI设计和持久化，修
 
 本项目基于以下开源项目：
 
-- FireRedASR2S：请参考 [FireRedASR2S LICENSE](FireRedASR2S/LICENSE)
+- FireRedASR2S：https://github.com/FireRedTeam/FireRedASR2S
 - Qwen
 - WenetSpeech-Yue
 - WenetSpeech-Chuan
 
-### 引用
-
-如果您在研究中使用了本项目，请引用：
-
-```
-@article{fireredasr2,
-  title={FireRedASR2: Advancing Chinese Speech Recognition with LLM and AED},
-  author={FireRedTeam},
-  journal={arXiv preprint arXiv:2501.14350},
-  year={2025}
-}
-```
-
----
 
 ## 致谢
 
