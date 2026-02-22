@@ -82,12 +82,19 @@ cd fireredasr
 ```
 
 
-### 步骤 2：安装依赖及pytorch
+### 步骤 2：安装依赖
 ```bash
 pip install -r requirements.txt
 ```
-必须从https://pytorch.org/get-started/locally/  安装对应自己cuda版本的pytorch。
-### 步骤 3：下载预训练模型
+
+### 步骤 3：安装 pytorch
+必须从https://pytorch.org/get-started/locally/  安装对应自己cuda版本的pytorch，这就是为什么没有直接把pytorch库写进依赖中。
+### 步骤 4：安装ffmpeg
+```bash
+winget install --id=Gyan.FFmpeg -e
+```
+安装方法不唯一，如运行时报错，记得手动配置FFmpeg的系统环境变量。
+### 步骤 5：下载预训练模型
 项目提供了便捷的模型下载脚本：
 
 ```bash
